@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
-import com.rhdzmota.chatbot.gateway.controller.Hello
+import com.rhdzmota.chatbot.gateway.controller.{FacebookController, Hello}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -17,7 +17,8 @@ object Gateway extends App {
     implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
 
     val route: Route = pathPrefix("v1") {
-      Hello.route
+      Hello.route ~
+      FacebookController().route
     }
     
     Http().bindAndHandle(route, Settings.Http.host, Settings.Http.port)
