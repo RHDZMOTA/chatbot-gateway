@@ -26,5 +26,5 @@ lazy val root = (project in file(".")).
     }
   ).dependsOn(fbMessengerProject)
 
-lazy val fbMessengerProject = RootProject(uri("git://github.com/rhdzmota/fb-messenger.git#temp/without-tests"))
+lazy val fbMessengerProject = RootProject(uri("git://github.com/rhdzmota/fb-messenger.git#develop"))
 

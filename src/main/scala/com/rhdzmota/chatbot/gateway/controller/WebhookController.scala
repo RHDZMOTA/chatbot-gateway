@@ -7,10 +7,11 @@ import akka.http.scaladsl.server.Directives._
 
 import com.rhdzmota.chatbot.gateway.service.{WebhookService, FacebookService}
 import com.rhdzmota.fbmessenger.webhook.model.Event
+import com.rhdzmota.fbmessenger.webhook.model.implicits.Encoders._
+import com.rhdzmota.fbmessenger.webhook.model.implicits.Decoders._
 
-import io.circe.parser.decode
-import io.circe.generic.auto._
 import io.circe.syntax._
+import io.circe.parser.decode
 
 
 sealed trait WebhookController {
