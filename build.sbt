@@ -1,5 +1,7 @@
 import Dependencies._
 
+enablePlugins(JavaAppPackaging)
+
 lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
@@ -26,5 +28,7 @@ lazy val root = (project in file(".")).
     }
   ).dependsOn(fbMessengerProject)
 
-lazy val fbMessengerProject = RootProject(uri("git://github.com/rhdzmota/fb-messenger.git#develop"))
+val targetCommit = "661c9a21b0af16f76186b283f3a299ddb4156966"
+
+lazy val fbMessengerProject = RootProject(uri(s"git://github.com/rhdzmota/fb-messenger.git#$targetCommit"))
 
