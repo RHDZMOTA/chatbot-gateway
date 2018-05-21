@@ -6,20 +6,18 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 
 import com.rhdzmota.chatbot.gateway.service.{WebhookService, FacebookService}
-import com.rhdzmota.fbmessenger.webhook.model.Event
+import com.rhdzmota.fbmessenger.webhook.model._
 import com.rhdzmota.fbmessenger.webhook.model.implicits.Encoders._
 import com.rhdzmota.fbmessenger.webhook.model.implicits.Decoders._
 
 import io.circe.syntax._
 import io.circe.parser.decode
 
-
 sealed trait WebhookController {
   def service: WebhookService
 }
 
-
-case class FacebookController() extends WebhookController {
+case object FacebookController extends WebhookController {
 
   val service = FacebookService()
 
@@ -43,13 +41,17 @@ case class FacebookController() extends WebhookController {
         } ~
         post {
           entity(as[String]) {postBody =>
-            val webhookEvent = decode[Event](postBody)
-            complete(HttpEntity(ContentTypes.`application/json`, postBody))
-
+            decode[Event](postBody) match {
+              case Left(error: io.circe.Error) => 
+                println(postBody)
+                complete(HttpEntity(ContentTypes.`application/json`, s"""{"error": ${error.toString}}"""))
+              case Right(webhookEvent: Event)  =>
+                complete(HttpEntity(ContentTypes.`application/json`, webhookEvent.asJson.toString))
+            }
+            
           }
         }
       }
     }
-
 
 }
