@@ -28,7 +28,6 @@ lazy val root = (project in file(".")).
     }
   ).dependsOn(fbMessengerProject)
 
-val targetCommit = "661c9a21b0af16f76186b283f3a299ddb4156966"
+val targetCommit = "5330eab77efa8e3bcc47042fe159881e1f99dace"
 
 lazy val fbMessengerProject = RootProject(uri(s"git://github.com/rhdzmota/fb-messenger.git#$targetCommit"))
-

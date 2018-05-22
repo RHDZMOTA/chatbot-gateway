@@ -6,6 +6,10 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 
 import com.rhdzmota.chatbot.gateway.service.{WebhookService, FacebookService}
+import com.rhdzmota.chatbot.gateway.util.EventSyntax._
+import com.rhdzmota.chatbot.gateway.model._
+import com.rhdzmota.chatbot.gateway.model.implicits.Encoders._
+import com.rhdzmota.chatbot.gateway.model.implicits.Decoders._
 import com.rhdzmota.fbmessenger.webhook.model._
 import com.rhdzmota.fbmessenger.webhook.model.implicits.Encoders._
 import com.rhdzmota.fbmessenger.webhook.model.implicits.Decoders._
@@ -42,15 +46,16 @@ case object FacebookController extends WebhookController {
         post {
           entity(as[String]) {postBody =>
             decode[Event](postBody) match {
-              case Left(error: io.circe.Error) => 
+              case Left(error: io.circe.Error) =>
                 println(postBody)
                 complete(HttpEntity(ContentTypes.`application/json`, s"""{"error": ${error.toString}}"""))
               case Right(webhookEvent: Event)  =>
-                val stringResponse = webhookEvent.asJson.toString
+                val messages: List[CustomMessage] = webhookEvent.toCustomMessages.flatten
+                val stringResponse = messages.asJson.toString
                 println(stringResponse)
                 complete(HttpEntity(ContentTypes.`application/json`, stringResponse))
             }
-            
+
           }
         }
       }
