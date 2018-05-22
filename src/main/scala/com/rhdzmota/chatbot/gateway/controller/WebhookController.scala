@@ -46,7 +46,9 @@ case object FacebookController extends WebhookController {
                 println(postBody)
                 complete(HttpEntity(ContentTypes.`application/json`, s"""{"error": ${error.toString}}"""))
               case Right(webhookEvent: Event)  =>
-                complete(HttpEntity(ContentTypes.`application/json`, webhookEvent.asJson.toString))
+                val stringResponse = webhookEvent.asJson.toString
+                println(stringResponse)
+                complete(HttpEntity(ContentTypes.`application/json`, stringResponse))
             }
             
           }
