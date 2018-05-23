@@ -10,5 +10,13 @@ object Settings {
     val host: String = http.getString("host")
     val port: Int = sys.env.getOrElse("PORT", http.getString("port")).toInt
   }
-}
 
+  object PubSub {
+    private val pubsub: Config = app.getConfig("pubsub")
+    val privateKeyLabel: String = pubsub.getString("privateKeyLabel")
+    val projectIdLabel: String = pubsub.getString("projectIdLabel")
+    val apiIdLabel: String = pubsub.getString("apiIdLabel")
+    val serviceAccountEmailLabel: String = pubsub.getString("serviceAccountEmailLabel")
+    val fbTopic = pubsub.getString("fbTopic")
+  }
+}
