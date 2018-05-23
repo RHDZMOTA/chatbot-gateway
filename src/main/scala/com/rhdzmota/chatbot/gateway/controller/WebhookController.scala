@@ -13,6 +13,10 @@ import com.rhdzmota.chatbot.gateway.model.implicits.Decoders._
 import com.rhdzmota.fbmessenger.webhook.model._
 import com.rhdzmota.fbmessenger.webhook.model.implicits.Encoders._
 import com.rhdzmota.fbmessenger.webhook.model.implicits.Decoders._
+import com.rhdzmota.pubsub.{PubSubConfig, PubSubProducer}
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import io.circe.syntax._
 import io.circe.parser.decode
@@ -21,7 +25,7 @@ sealed trait WebhookController {
   def service: WebhookService
 }
 
-case object FacebookController extends WebhookController {
+case class FacebookController(publish: (String, String, Option[Map[String, String]]) => Option[Future[Seq[Seq[String]]]]) extends WebhookController {
 
   val service = FacebookService()
 
@@ -51,14 +55,21 @@ case object FacebookController extends WebhookController {
                 complete(HttpEntity(ContentTypes.`application/json`, s"""{"error": ${error.toString}}"""))
               case Right(webhookEvent: Event)  =>
                 val messages: List[CustomMessage] = webhookEvent.toCustomMessages.flatten
+                val publishProcedure: List[Option[Future[Seq[Seq[String]]]]] = messages.map(message => {
+                  val attachments = message.toMap
+                  val messageId = s"${attachments("timestamp")}-${attachments("sender")}-${attachments("receiver")}"
+                  val data = attachments.get("type").getOrElse("undefined")
+                  publish(data, messageId, Some(attachments))
+                })
+                publishProcedure.foreach(x => x match {
+                  case Some(value) => println(s"println: publishProcedure = Some(${value.toString})")
+                  case None => println("println: publishProcedure = None")
+                })
                 val stringResponse = messages.asJson.toString
-                println(stringResponse)
                 complete(HttpEntity(ContentTypes.`application/json`, stringResponse))
             }
-
           }
         }
       }
     }
-
 }

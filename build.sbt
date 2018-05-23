@@ -23,11 +23,14 @@ lazy val root = (project in file(".")).
         "com.typesafe.akka" %% "akka-actor" % akkaVersion,
         "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
         "com.typesafe.akka" %% "akka-http-core" % akkaHttpVersion,
+	"com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub" % "0.19",
         scalaTest % Test
       )
     }
-  ).dependsOn(fbMessengerProject)
+  ).dependsOn(fbMessengerProject).dependsOn(googlePubSubScalaProject)
 
-val targetCommit = "5330eab77efa8e3bcc47042fe159881e1f99dace"
+val targetCommitFbMessengerProject = "5330eab77efa8e3bcc47042fe159881e1f99dace"
+val targetCommitGooglePubsubScala = "c3604f6370e87f63c567b45d029afa3eb9c666db"
 
-lazy val fbMessengerProject = RootProject(uri(s"git://github.com/rhdzmota/fb-messenger.git#$targetCommit"))
+lazy val fbMessengerProject = RootProject(uri(s"git://github.com/rhdzmota/fb-messenger.git#$targetCommitFbMessengerProject"))
+lazy val googlePubSubScalaProject = RootProject(uri(s"git://github.com/rhdzmota/google-pubsub-scala.git#$targetCommitGooglePubsubScala")) 
