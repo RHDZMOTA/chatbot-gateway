@@ -19,7 +19,7 @@ object EventSyntax {
           val timestamp   = fbMessage.timestamp
           val messageContentList: List[Option[Content]] = fbMessage.message match {
             case Text(mid, text, quickReply) => quickReply match {
-              case Some(qr) => List(Some(CustomText(mid, "quickReply", timestamp, qr.payload)))
+              case Some(qr) => List(Some(CustomQuickReply(mid, "quickReply", timestamp, qr.payload)))
               case None     => List(Some(CustomText(mid, "text", timestamp, text)))
             }
             case WithAttachment(mid, seq, attachments) =>

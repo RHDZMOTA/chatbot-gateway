@@ -60,6 +60,8 @@ case class FacebookController(publish: (String, String, Option[Map[String, Strin
                   val messageId = s"${attachments("timestamp")}-${attachments("sender")}-${attachments("receiver")}"
                   val data = attachments.get("type").getOrElse("undefined")
                   println(">> DATA: " + data.toString)
+                  println(">> MESSAGE ID:" + messageId)
+                  println(">> ATTACHMENTS" + attachments.toString)
                   publish(data, messageId, Some(attachments))
                 })
                 publishProcedure.foreach(x => x match {
