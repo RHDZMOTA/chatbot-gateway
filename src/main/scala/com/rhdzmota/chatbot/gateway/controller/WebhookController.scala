@@ -66,7 +66,7 @@ case class FacebookController(publish: (String, String, Option[Map[String, Strin
                   case Some(value) => 
                     println(postBody)
                     println(messages.asJson.toString)
-                    println(s"println: publishProcedure = Some(${value.toString})")
+                    value.onComplete(z => println(s"println: publishProcedure = Some(${z.toString})"))
                   case None => 
                     println(postBody)
                     println("println: publishProcedure = None")
