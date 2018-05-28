@@ -66,7 +66,9 @@ case class FacebookController(publish: (String, String, Option[Map[String, Strin
                     println(postBody)
                     println(messages.asJson.toString)
                     println(s"println: publishProcedure = Some(${value.toString})")
-                  case None => println("println: publishProcedure = None")
+                  case None => 
+                    println(postBody)
+                    println("println: publishProcedure = None")
                 })
                 val stringResponse = messages.asJson.toString
                 complete(HttpEntity(ContentTypes.`application/json`, stringResponse))
